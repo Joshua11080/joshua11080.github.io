@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        ul{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        body,p{
+            margin: 0;
+        }
+        .all{
+            width: 100vw;
+            height: 100vh;
+            padding: 60px;
+            display: flex;
+        }
+        .all aside{
+            width: 300px;
+            border: 1px #000 solid;
+            height:100%;
+            margin-right: 40px;
+            padding: 20px;
+        }
+        .all aside input,.all aside textarea{
+            width: 100%;
+        }
+        .all aside textarea{
+            resize: none;
+            height: 300px;
+        }
+        .btn{
+            display: flex;
+            height: 100px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .all button{
+            width: 120px;
+            height: 40px;
+            border-radius: 15px;
+            font-size: 26px;
+        }
+        .content{
+            flex: 1;
+            height:100%;
+            border: 1px #000 solid;
+            padding: 20px;
+            overflow: hidden;
+        }
+        .text_list li{
+            width: 120px;
+            float: left;
+            margin: 0 10px 10px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+        .text_list li img{
+            width: 100px;
+            height: 100px;
+        }
+        .text_list li h5{
+            margin: 0;
+        }
+        .disabled{
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="all">
+		<div class="container">
+		    <h1></h1>
+		    <div id="innerHTMLtxt"></div>
+		</div>
+        <aside>
+            <label>
+                <h4>标题：</h4>
+                <input type="text" class="disabled" disabled/>
+            </label>
+            <label>
+                <h4>简介：</h4>
+                <textarea name="" class="disabled" disabled></textarea>
+            </label>
+            <div class="btn">
+                <button disabled class="disabled">保存</button>
+                <button disabled class="disabled">取消</button>
+            </div>
+        </aside>
+        <div class="content">
+            <button>+</button>
+			<h4>目录</h4>
+            <ul class="text_list">
+               
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script>
+        var bOn = true;
+        var how = "";
+        var nowIndex = 0;
+        showList();
+        $(".content button").click(function (){
+            bOn = true;
+            canUserOrNot();
+            how = "new";
+        })
+        $("aside button").eq(0).click(function (){
+            if($("aside input").val()&&$("aside textarea").val()){
+                var arr = localStorage.getItem("textList") ? JSON.parse(localStorage.getItem("textList")) : [];
+                if(how == "new"){
+                    var obj = {};
+                    obj.title = $("aside input").val();
+                    obj.text = $("aside textarea").val();
+                    obj.time = new Date().getTime();
+                    arr.push(obj);
+                }else if(how == "old"){
+                    arr[nowIndex].title = $("aside input").val();
+                    arr[nowIndex].text = $("aside textarea").val();
+                    arr[nowIndex].time = new Date().getTime();  
+                }
+                $("aside input").val("");
+                $("aside textarea").val("");
+                bOn = false;
+                canUserOrNot();
+                localStorage.setItem("textList",JSON.stringify(arr));
+                showList();
+            }else{
+                alert("请先填写标题和正文");
+            }
+        })
+        $("aside button").eq(1).click(function (){
+            $("aside input").val("");
+            $("aside textarea").val("");
+            bOn = false;
+            canUserOrNot();
+			li.remove();
+        })
+        $(".text_list").on("click","li",function (){
+            var arr = localStorage.getItem("textList") ? JSON.parse(localStorage.getItem("textList")) : [];
+            $("aside input").val(arr[$(this).index()].title);
+            $("aside textarea").val(arr[$(this).index()].text);
+            how = "old";
+            nowIndex = $(this).index();
+            bOn = true;
+            canUserOrNot();
+        })
+
+        function canUserOrNot(){
+            if(bOn){
+                $("aside input,aside textarea,aside button").attr("disabled",false).removeClass("disabled");
+            }else{
+                $("aside input,aside textarea,aside button").attr("disabled",true).addClass("disabled");
+            }
+        }
+
+        function showList(){
+            var arr = localStorage.getItem("textList") ? JSON.parse(localStorage.getItem("textList")) : [];
+            $(".text_list").html(arr.map((item)=>{
+                return (`<li>
+                <img src="text.jpg" alt="">
+                <h5>${item.title}</h5>
+                <p>${timeFormat(item.time)}</p>
+				<button style="font-size:12px;width:70px;height:25px">查看简介</button>
+				<br>
+				<br>
+				<a href="index.html?title=${item.title}" + btitile;><button style="font-size:12px;width:70px;height:25px" type="button">打开笔记</button></a>
+            </li>`)
+            }))
+        }
+
+        function timeFormat(t){
+            var oTime = new Date(t);
+            var aDate = [oTime.getFullYear(),oTime.getMonth()+1,oTime.getDate()];
+            var aTime = [oTime.getHours(),oTime.getMinutes(),oTime.getSeconds()];
+            return aDate.join("/")+" "+aTime.join(":");
+        }
+		
+		message = document.querySelector('h1');
+		let name = decodeURI(document.URL)
+		name = name.slice(name.indexOf('=') + 1)
+		if(name.length<20){
+		message.innerText = name + '的主页';
+		message.style.color = "#3b3b3b";
+		message.style.position = "absolute";
+		message.style.marginLeft= "60px";
+		message.style.marginTop= "-50px";	
+		}
+    </script>
+</body>
+</html>
+
