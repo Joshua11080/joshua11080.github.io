@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MdNotebook</title>
+	<style>
+		#goback{
+			float: left;
+			height: 40px;
+			width: 120px;
+			margin-left: 15px;
+			margin-top: 5px;
+			color: #9ABC66;
+			font-size: 25px;
+			padding-left: 8px;
+			border: 2px solid #9ABC66;
+			border-radius: 50px;
+			position: absolute;
+		}
+		#div1{
+			display: none;
+		}
+		
+		* {
+		    margin: 0;
+		    padding: 0;
+		    box-sizing: border-box;
+		    -webkit-box-sizing: border-box;
+		}
+		
+		html,
+		body {
+		    height: 100%;
+		}
+		
+		a,
+		a:hover,
+		a:focus {
+		    text-decoration: none;
+		    color: #000;
+		}
+		
+		#div1 {
+		    width: 200px;
+		    height: 100%;
+		    left: -200px;
+		    position: absolute;
+		    background-color: rgba(220, 220, 220, 0.2);
+		    z-index: 100;
+		}
+		
+		#span {
+		    width: 20px;
+		    height: 40px;
+		    line-height: 40px;
+		    position: absolute;
+		    right: -20px;
+		    background-color: rgba(102, 66, 0, 0.1);
+		    border-radius: 0 20px 20px 0;
+		    z-index: 100;
+		}
+		
+		#addNote,
+		#delNote {
+		    width: 200px;
+		    height: 60px;
+		    border-radius: 20px;
+		    border: 1px solid #aaa;
+		    margin: 10px 0;
+		}
+		
+		.head {
+		    width: 100%;
+		    height: 60px;
+		    background-color: antiquewhite;
+		}
+		
+		.cell {
+		    width: 100%;
+		    height: 160px;
+		}
+		
+		.text {
+		    width: 100%;
+		    height: 100px;
+		    border: none;
+		    text-align: left;
+		    line-height: 20px;
+		    background-color: #fff;
+		}
+		
+		.note {
+		    background-color: floralwhite;
+		}
+		
+		.menu {
+		    position: relative;
+		    width: 475px;
+		    height: 36px;
+		    padding: 5px 0;
+		    margin: 0 auto;
+		}
+		
+		.menu button {
+		    width: 75px;
+		    height: 30px;
+		    line-height: 20px;
+		    font-size: 12px;
+		    background: #eee;
+		    border: 1px solid #aaa;
+		    border-radius: 12px;
+		}
+		
+		.num {
+		    height: 20px;
+		    text-align: center;
+		}
+		
+	</style>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+	<div id="div1">
+	    <span id="span">></span>
+	    <button id="addNote"></button>
+	    <button id="delNote"></button>
+	</div>
+    <div class="head">
+		<div id="goback"><a style="color: #9ABC66;" href="index.html">返回主页</a></div> <h1></h1>
+	</div>
+    <div class="note">
+        <div class="cell" id="cell-0">
+            <div class="text" contenteditable="true" ondblclick="dbClick(this)"></div>
+            <div class="menu">
+                <button onclick="moveCellUp(this.parentNode.parentNode)">↑</button>
+                <button onclick="moveCellDown(this.parentNode.parentNode)">↓</button>
+                <button onclick="addCellUp(this.parentNode.parentNode)">在上方新建</button>
+                <button onclick="addCellDown(this.parentNode.parentNode)">在下方新建</button>
+				<button onclick="mdToHtml(this.parentNode.previousElementSibling)">保存</button>
+                <button onclick="delCell(this.parentNode.parentNode)">删除</button>
+            </div>
+            <div class="num"></div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script src="js/main2.js"></script>
+    <script src="js/main3.js"></script>
+	<script>  
+		   var url = location.search; //获取url中"?"符后的字串   
+		   var theRequest = new Object();   
+		   if (url.indexOf("?") != -1) {   
+		      var str = url.substr(1);   
+		      strs = str.split("&");   
+		      for(var i = 0; i < strs.length; i ++) {   
+		         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
+		      }   
+		   }   
+		   // return theRequest;
+		   console.log(theRequest);
+		   var tt = JSON.stringify(theRequest);
+		   // alert(tt);
+		   var reg1 = new RegExp("{"); // 删除字符串里所有的"{"
+		   var a1 = tt.replace(reg1,"");
+		   console.log(a1);
+		   var reg2 = new RegExp("}"); // 删除字符串里所有的"}"
+		   var a2 = a1.replace(reg2,"");
+		   console.log(a2);
+		   message = document.querySelector('h1');
+		   message.innerHTML = a2;
+		   message.style.color = "#9ABC66"; 
+		   message.style.textAlign =" center";
+	</script>
+</body>
+
+</html>
